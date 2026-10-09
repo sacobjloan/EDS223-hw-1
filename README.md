@@ -6,6 +6,7 @@ Visually exploring pollutants (PM25) and low-income communities geospatially in 
 
 ### Repo Structure
 
+```
 EDS223-HW1
 │   README.md
 │   ej_screen.qmd
@@ -13,6 +14,7 @@ EDS223-HW1
 │   Rmd/Proj files    
 └───data
      └───ejscreen
+```
 
 ### Data Access
 
