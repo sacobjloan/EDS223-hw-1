@@ -1,0 +1,66 @@
+---
+title: Mapping Low-Income Communities and Fine Particulate Matter in Kern County
+date: 10/10/2026
+name: Jacob Sloan
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(here)
+library(tmap)
+library(rvest)
+```
+```{r}
+df <- st_read(here("data","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
+```
+
+Data was sourced from the EPA's EJScreen tool, which mapped environmental justice issues in the US. This tool is no longer online, but the data used for these maps was pulled from the site while it existed.
+
+```{r}
+kern <- df |> 
+    filter(CNTY_NAME == "Kern County")
+```
+
+
+```{r}
+pm25map <- 
+    tm_shape(kern) +
+        tm_polygons(
+            fill = "PM25",
+            fill.scale = tm_scale_continuous(values = "YlOrBr"),
+            fill.legend = tm_legend(
+                title = "Fine Inhalable Matter (μg/m3)",
+                position = tm_pos_out("right","center"),
+                frame = FALSE
+                )
+            ) +
+        tm_title("Pollutants in Kern County") +
+        tm_compass(type = "4star", position = tm_pos_in("left","bottom")) +
+        tm_scalebar(position = tm_pos_in("left","bottom"))
+```
+
+```{r}
+lowincmap <- 
+    tm_shape(kern) +
+        tm_polygons(
+            fill = "LOWINCPCT",
+            fill.scale = tm_scale_continuous(values = "YlOrBr"),
+            fill.legend = tm_legend(
+                title = "Percent Population Low Income",
+                position = tm_pos_out("right","center"),
+                frame = FALSE
+                )
+            ) +
+        tm_title("Percentage of People Deemed Low Income") +
+        tm_compass(type = "4star", position = tm_pos_in("left","bottom")) +
+        tm_scalebar(position = tm_pos_in("left","bottom"))
+```
+
+```{r}
+tmap_arrange(lowincmap,pm25map, nrow = 2)
+```
+
+The two maps show a distribution of people who are deemed low-income, and prevalence of fine particulate matter (a form of harmful air pollution).
+
+Visually, it seems like there is a relationship between the two. The north-western corner of the map seems to have high concentrations of both low-income folk and PP25. This often happens when heavy polluting industry is placed in low-income neighborhoods. 
